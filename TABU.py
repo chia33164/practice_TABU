@@ -1,18 +1,16 @@
 import random
 
+# input
 Process_time = [10, 10, 13, 4, 9, 4, 8, 15, 7, 1, 9, 3, 15, 9, 11, 6, 5, 14, 18, 3]
 Due_date = [50, 38, 49, 12, 20, 105, 73, 45, 6, 64, 15, 6, 92, 43, 78, 21, 15, 50, 150, 99]
 Weights = [10, 5, 1, 5, 10, 1, 5, 10, 5, 1, 5, 10, 10, 5, 1, 10, 5, 5, 1, 5]
 
+# initial seq to a random list from 1~20
 seq = list(range(1,21))
-# seq = random.sample(seq, 20)
-# Process_time = [10,10,13,4]
-# Due_date = [4,2,1,12]
-# Weights = [14,12,1,12]
-# seq = [2,1,4,3]
-# print(seq)
+seq = random.sample(seq, 20)
 
-TABU_size = 4
+iteration = int(input("iteration times : "))
+TABU_size = int(input("TABU_size : "))
 TABU_list = []
 doing_time = 0
 waste_time = []
@@ -20,7 +18,6 @@ process_sum = 0
 seq_num = 0
 process_list = []
 waste_sum = 0
-count = 10
 final = 0
 test_final = 10000000000000000000000000000
 swap_index = 0
@@ -29,6 +26,7 @@ tabu = False
 count = 19
 final_seq = []
 
+# parameter t is seq that only swap two of element
 def testseq (t) :
     testseq_num = 0
     tprocess_sum = 0
@@ -42,11 +40,7 @@ def testseq (t) :
             testseq_num = testseq_num - 1
 
         testseq_num = t.index(x)
-
-        if tprocess_sum - Due_date[t[testseq_num]-1] < 0 :
-            twaste_time.append(0)
-        else :
-            twaste_time.append(tprocess_sum - Due_date[t[testseq_num]-1])
+        twaste_time.append(max(tprocess_sum - Due_date[t[testseq_num]-1], 0))
         tprocess_sum = 0
 
     for x in seq :
@@ -66,30 +60,29 @@ def input_TABU () :
         TABU_list.pop(0)
         TABU_list.append(tmp)
 
-# first time
+# first iteration
 for x in seq:
     seq_num = seq.index(x)
     while seq_num >= 0 :
         process_sum = process_sum + Process_time[seq[seq_num]-1]
         seq_num = seq_num - 1
     seq_num = seq.index(x)
-    if process_sum - Due_date[seq[seq_num]-1] < 0 :
-        waste_time.append(0) 
-    else :
-        waste_time.append(process_sum - Due_date[seq[seq_num]-1])
+    waste_time.append(max(process_sum - Due_date[seq[seq_num]-1], 0))
     process_sum = 0
     
 for x in seq :
     seq_num = seq.index(x)
     waste_sum = waste_sum + waste_time[seq_num]*Weights[x-1]
 
+# initial final_seq use first iteration 
 for x in seq :
     final_seq.append(x)
 
+# initial final use first iteration 
 final = waste_sum
 
-# other time
-while doing_time < 199 :
+# other iteration
+while doing_time < (iteration-1) :
     doing_time = doing_time + 1
     while  swap_index < 19 :
         # check whether has tabu
@@ -103,15 +96,11 @@ while doing_time < 199 :
             tabu = False
         else :
             # swap element
-            temp = seq[swap_index]
-            seq[swap_index] = seq[swap_index+1]
-            seq[swap_index+1] = temp
-
+            seq[swap_index], seq[swap_index+1] = seq[swap_index+1], seq[swap_index]
+            # get this seq's waste_sum
             waste_sum = testseq(seq)
-            temp = seq[swap_index]
-            seq[swap_index] = seq[swap_index+1]
-            seq[swap_index+1] = temp
-
+            seq[swap_index], seq[swap_index+1] = seq[swap_index+1], seq[swap_index]
+            # if waste_sum is better than this iteration's current optimum , save it
             if waste_sum < test_final :
                 index = swap_index
                 test_final = waste_sum
@@ -119,10 +108,9 @@ while doing_time < 199 :
             swap_index = swap_index + 1
 
     input_TABU()
-
-    temp = seq[index]
-    seq[index] = seq[index+1]
-    seq[index+1] = temp
+    # use optimum in this iteration to do next iteration
+    seq[index], seq[index+1] = seq[index+1], seq[index]
+    # if this iteration's optimum is better than global optimum, save it
     if test_final < final :
         final = test_final
         final_seq.clear()
@@ -133,7 +121,6 @@ while doing_time < 199 :
     test_final = 1000000000000
     swap_index = 0
 
-    print("TABU is ", TABU_list)
-
-print("final seq is ", final_seq)
-print("final waste is ", final)
+print("Final   TABU  is ", TABU_list)
+print("Optimum seq   is ", final_seq)
+print("Optimum waste is ", final)
