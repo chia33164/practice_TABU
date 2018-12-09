@@ -7,7 +7,7 @@ Weights = [10, 5, 1, 5, 10, 1, 5, 10, 5, 1, 5, 10, 10, 5, 1, 10, 5, 5, 1, 5]
 
 # initial seq to a random list from 1~20
 seq = list(range(1,21))
-# seq = random.sample(seq, 20)
+seq = random.sample(seq, 20)
 
 iteration = int(input("iteration times : "))
 TABU_size = int(input("TABU_size : "))
