@@ -7,7 +7,7 @@ Weights = [10, 5, 1, 5, 10, 1, 5, 10, 5, 1, 5, 10, 10, 5, 1, 10, 5, 5, 1, 5]
 
 # initial seq to a random list from 1~20
 seq = list(range(1,21))
-seq = random.sample(seq, 20)
+# seq = random.sample(seq, 20)
 
 iteration = int(input("iteration times : "))
 TABU_size = int(input("TABU_size : "))
@@ -23,7 +23,6 @@ test_final = 10000000000000000000000000000
 swap_index = 0
 index = 0
 tabu = False
-count = 19
 final_seq = []
 
 # parameter t is seq that only swap two of element
@@ -31,7 +30,6 @@ def testseq (t) :
     testseq_num = 0
     tprocess_sum = 0
     twaste_time = []
-    tcount = 19
     twaste_sum = 0
     for x in t:
         testseq_num = t.index(x)
