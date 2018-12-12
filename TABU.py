@@ -1,4 +1,5 @@
 import random
+import time
 
 # input
 Process_time = [10, 10, 13, 4, 9, 4, 8, 15, 7, 1, 9, 3, 15, 9, 11, 6, 5, 14, 18, 3]
@@ -57,6 +58,8 @@ def input_TABU () :
     else :
         TABU_list.pop(0)
         TABU_list.append(tmp)
+
+start_time = time.time()
 
 # first iteration
 for x in seq:
@@ -119,6 +122,6 @@ while doing_time < (iteration-1) :
     test_final = 1000000000000
     swap_index = 0
 
-print("Final   TABU  is ", TABU_list)
-print("Optimum seq   is ", final_seq)
-print("Optimum waste is ", final)
+print("approximate optimal solution is ", final_seq)
+print("fitness function value is ", final)
+print("running time is ", time.time()-start_time, "(s)")
